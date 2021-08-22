@@ -37,7 +37,7 @@ app.get("/weather", async (req: Request, res: Response): Promise<Response> => {
   });
 });
 
-// GET '/streetview?lat=<latitude>&long=<longitude>'
+// GET '/streetview?lat=<latitude>&lon=<longitude>'
 app.get("/streetview", async (req: Request, res: Response): Promise<any> => {
   const [lat, lon] = [req.query.lat, req.query.lon];
   if (!lat || !lon) {
