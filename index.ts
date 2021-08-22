@@ -18,11 +18,35 @@ app.get("/", async (req: Request, res: Response): Promise<Response> => {
   });
 });
 
+// GET '/weather?lat=<latitude>&long=<longitude>'
+app.get("/weather", async (req: Request, res: Response): Promise<Response> => {
+  const [lat, long] = [req.query.lat, req.query.long];
+  if (!lat || !long) {
+    return res.status(400).send({ error: "need coordinates" });
+  }
+
+  const weather = await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${process.env.OPENWEATHER_API}`
+  ).then((res) => res.json());
+  const forecast = await fetch(
+    `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${long}&cnt=7&appid=${process.env.OPENWEATHER_API}`
+  ).then((res) => res.json());
+
+  return res.status(200).send({
+    weather,
+    forecast,
+    query: req.query,
+  });
+});
+
 // GET '/streetview?lat=<latitude>&long=<longitude>'
 app.get("/streetview", async (req: Request, res: Response): Promise<any> => {
+  const [lat, long] = [req.query.lat, req.query.long];
+  if (!lat || !long) {
+    return res.status(400).send({ error: "need coordinates" });
+  }
   const angle = Math.floor(Math.random() * 8) * 45;
-  const coords = { lat: req.query.lat, long: req.query.long };
-  const location = coords.lat + "," + coords.long;
+  const location = lat + "," + long;
   const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?\
 size=640x320\
 &location=${location}\
