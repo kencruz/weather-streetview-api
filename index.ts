@@ -1,11 +1,13 @@
 import express, { Application, Request, Response } from "express";
 import fetch from "node-fetch";
+import cors from "cors";
 require("dotenv").config();
 
 const app: Application = express();
 const port = 3000;
 
 // Body parsing Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
