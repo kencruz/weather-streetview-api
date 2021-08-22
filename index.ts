@@ -12,8 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).send({
     message: "Hello World!",
-    streetViewUrl: process.env.GOOGLE_STREETVIEW_API,
-    openweather: process.env.OPENWEATHER_API,
     query: req.query,
   });
 });
