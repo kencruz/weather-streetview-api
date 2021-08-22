@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from "express";
+require("dotenv").config();
 
 const app: Application = express();
 const port = 3000;
