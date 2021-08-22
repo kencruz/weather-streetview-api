@@ -18,18 +18,18 @@ app.get("/", async (req: Request, res: Response): Promise<Response> => {
   });
 });
 
-// GET '/weather?lat=<latitude>&long=<longitude>'
+// GET '/weather?lat=<latitude>&lon=<longitude>'
 app.get("/weather", async (req: Request, res: Response): Promise<Response> => {
-  const [lat, long] = [req.query.lat, req.query.long];
-  if (!lat || !long) {
+  const [lat, lon] = [req.query.lat, req.query.lon];
+  if (!lat || !lon) {
     return res.status(400).send({ error: "need coordinates" });
   }
 
   const weather = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${process.env.OPENWEATHER_API}`
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_API}`
   ).then((res) => res.json());
   const forecast = await fetch(
-    `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${long}&cnt=7&appid=${process.env.OPENWEATHER_API}`
+    `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=7&appid=${process.env.OPENWEATHER_API}`
   ).then((res) => res.json());
 
   return res.status(200).send({
@@ -41,12 +41,12 @@ app.get("/weather", async (req: Request, res: Response): Promise<Response> => {
 
 // GET '/streetview?lat=<latitude>&long=<longitude>'
 app.get("/streetview", async (req: Request, res: Response): Promise<any> => {
-  const [lat, long] = [req.query.lat, req.query.long];
-  if (!lat || !long) {
+  const [lat, lon] = [req.query.lat, req.query.lon];
+  if (!lat || !lon) {
     return res.status(400).send({ error: "need coordinates" });
   }
   const angle = Math.floor(Math.random() * 8) * 45;
-  const location = lat + "," + long;
+  const location = lat + "," + lon;
   const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?\
 size=640x320\
 &location=${location}\
