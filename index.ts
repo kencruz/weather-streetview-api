@@ -1,15 +1,26 @@
 import express, { Application, Request, Response } from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 require("dotenv").config();
 
 const app: Application = express();
 const port = 3000;
+if (process.env.TRUST_PROXY === "true") {
+  app.set("trust proxy", 1);
+}
+const rateLimitWindow = process.env.RATE_LIMIT_WINDOW || 60;
+const rateLimitMax = process.env.RATE_LIMIT_MAX || 10;
+const limiter = rateLimit({
+  windowMs: Number(rateLimitWindow) * 1000, // In seconds
+  max: Number(rateLimitMax), // limit each IP to 100 requests per windowMs
+});
 
 // Body parsing Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(limiter);
 
 app.get("/", async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).send({
