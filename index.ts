@@ -75,14 +75,18 @@ app.get("/streetview", async (req: Request, res: Response): Promise<any> => {
 size=640x320\
 &location=${location}\
 &key=${process.env.GOOGLE_STREETVIEW_API}\
-&heading=${angle}&pitch=-1.5`;
+&heading=${angle}&pitch=-1.5&return_error_code=true`;
 
-  return fetch(streetViewUrl)
-    .then((r) => r.buffer())
-    .then((r) => {
-      res.set("Content-Type", "image/jpeg");
-      res.send(r);
-    });
+  const response = await fetch(streetViewUrl);
+  if (response.status != 200) {
+    return res
+      .status(400)
+      .send({ error: "streetview not found", query: req.query });
+  }
+
+  const buffer = await response.buffer();
+  res.set("Content-Type", "image/jpeg");
+  return res.send(buffer);
 });
 
 try {
