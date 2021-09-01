@@ -43,6 +43,19 @@ app.get("/weather", async (req: Request, res: Response): Promise<Response> => {
     `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=7&appid=${process.env.OPENWEATHER_API}`
   ).then((res) => res.json());
 
+  if (weather.cod != "200") {
+    return res.status(400).send({
+      weather,
+      query: req.query,
+    });
+  }
+  if (forecast.cod != "200") {
+    return res.status(400).send({
+      forecast,
+      query: req.query,
+    });
+  }
+
   return res.status(200).send({
     weather,
     forecast,
